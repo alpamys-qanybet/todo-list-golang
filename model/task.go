@@ -122,8 +122,8 @@ func CreateTask(name, description string) (uint16, error) {
 	}
 
 	err = conn.QueryRow(context.Background(), `
-        INSERT INTO task(name, description, status)
-        VALUES ($1, $2, $3) RETURNING id`,
+		INSERT INTO task(name, description, status)
+		VALUES ($1, $2, $3) RETURNING id`,
 		name,
 		description,
 		StatusCreated,
@@ -134,4 +134,26 @@ func CreateTask(name, description string) (uint16, error) {
 	}
 
 	return id, nil
+}
+
+func EditTask(id uint16, name, description string) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		UPDATE task
+		SET name = $1,
+			description = $2
+		WHERE id = $3`,
+		name,
+		description,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -83,3 +83,37 @@ func CreateTask(c *gin.Context) {
 
 	c.JSON(http.StatusOK, data)
 }
+
+func EditTask(c *gin.Context) {
+	id := controller.StringToUint16(c.Param("id"))
+	// fmt.Println(id)
+
+	var bodyData map[string]interface{}
+	err := extractBody(c, &bodyData)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "invalid body param(s)")
+		return
+	}
+
+	name := bodyData["name"].(string)
+	var description string
+	if bodyData["description"] != nil {
+		description = bodyData["description"].(string)
+	}
+	// status := bodyData["status"].(string) // implement change status code in another function?
+
+	err = controller.EditTask(id, name, description)
+	if err != nil {
+		errMsg := err.Error()
+		if errMsg == "edit_task_failure_name_is_required" {
+			c.JSON(http.StatusUnprocessableEntity, errMsg)
+			return
+		}
+		c.JSON(http.StatusInternalServerError, errMsg)
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}

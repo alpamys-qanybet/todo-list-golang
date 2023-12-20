@@ -59,6 +59,7 @@ func main() {
 	r.GET("/rest/task/offset", rest.GetTaskOffset)
 	r.GET("/rest/task/status", rest.GetTaskStatusList)
 	r.POST("/rest/task", rest.CreateTask)
+	r.PUT("/rest/task/:id", rest.EditTask)
 
 	r.Run(serverHost + ":" + serverPort)
 
