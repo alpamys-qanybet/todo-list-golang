@@ -117,3 +117,51 @@ func EditTask(c *gin.Context) {
 		"data": true,
 	})
 }
+
+func StartTaskProgress(c *gin.Context) {
+	fmt.Println("StartTaskProgress")
+	id := controller.StringToUint16(c.Param("id"))
+	fmt.Println(id)
+
+	err := controller.StartTaskProgress(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}
+
+func PauseTask(c *gin.Context) {
+	fmt.Println("PauseTask")
+	id := controller.StringToUint16(c.Param("id"))
+	fmt.Println(id)
+
+	err := controller.PauseTask(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}
+
+func DoneTask(c *gin.Context) {
+	fmt.Println("DoneTask")
+	id := controller.StringToUint16(c.Param("id"))
+	fmt.Println(id)
+
+	err := controller.DoneTask(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}

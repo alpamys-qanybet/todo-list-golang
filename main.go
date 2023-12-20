@@ -60,6 +60,9 @@ func main() {
 	r.GET("/rest/task/status", rest.GetTaskStatusList)
 	r.POST("/rest/task", rest.CreateTask)
 	r.PUT("/rest/task/:id", rest.EditTask)
+	r.PUT("/rest/task/:id/start_progress", rest.StartTaskProgress)
+	r.PUT("/rest/task/:id/pause", rest.PauseTask)
+	r.PUT("/rest/task/:id/done", rest.DoneTask)
 
 	r.Run(serverHost + ":" + serverPort)
 

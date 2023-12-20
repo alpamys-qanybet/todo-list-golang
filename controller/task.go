@@ -49,3 +49,15 @@ func EditTask(id uint16, name, description string) error {
 
 	return model.EditTask(id, name, description)
 }
+
+func StartTaskProgress(id uint16) error {
+	return model.StartTaskProgress(id)
+}
+
+func PauseTask(id uint16) error {
+	return model.PauseTask(id)
+}
+
+func DoneTask(id uint16) error {
+	return model.DoneTask(id)
+}

@@ -14,11 +14,11 @@ type Task struct {
 	Description string `json:"description"`
 }
 
-const StatusCreated string = "created"
-const StatusInProgress string = "in_progress"
-const StatusPaused string = "paused"
-const StatusDone string = "done"
-const StatusDeleted string = "deleted"
+const statusCreated string = "created"
+const statusInProgress string = "in_progress"
+const statusPaused string = "paused"
+const statusDone string = "done"
+const statusDeleted string = "deleted"
 
 type Status struct {
 	Name string `json:"name,omitempty"`
@@ -126,7 +126,7 @@ func CreateTask(name, description string) (uint16, error) {
 		VALUES ($1, $2, $3) RETURNING id`,
 		name,
 		description,
-		StatusCreated,
+		statusCreated,
 	).Scan(&id)
 
 	if err != nil {
@@ -156,4 +156,55 @@ func EditTask(id uint16, name, description string) error {
 	}
 
 	return nil
+}
+
+func StartTaskProgress(id uint16) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		UPDATE task
+		SET status = $1
+		WHERE id = $2`,
+		statusInProgress,
+		id,
+	)
+
+	return err
+}
+
+func PauseTask(id uint16) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		UPDATE task
+		SET status = $1
+		WHERE id = $2`,
+		statusPaused,
+		id,
+	)
+
+	return err
+}
+
+func DoneTask(id uint16) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		UPDATE task
+		SET status = $1
+		WHERE id = $2`,
+		statusDone,
+		id,
+	)
+
+	return err
 }
