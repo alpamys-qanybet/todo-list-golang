@@ -8,9 +8,9 @@ import (
 )
 
 type Task struct {
-	Id   uint16 `json:"id"`
-	Name string `json:"name"`
-	// Status			string	`json:"status,omitempty"`
+	Id          uint16 `json:"id"`
+	Name        string `json:"name"`
+	Status      string `json:"status"`
 	Description string `json:"description"`
 }
 
@@ -49,7 +49,7 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 	var result []*Task = []*Task{}
 
 	rows, err := conn.Query(context.Background(), `
-        SELECT id, name, description
+        SELECT id, name, description, status
         FROM task
     `)
 	if err != nil {
@@ -61,7 +61,7 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 		var item Task
 		var description sql.NullString
 
-		err = rows.Scan(&item.Id, &item.Name, &description)
+		err = rows.Scan(&item.Id, &item.Name, &description, &item.Status)
 		if err != nil {
 			return nil, err
 		}
@@ -122,10 +122,11 @@ func CreateTask(name, description string) (uint16, error) {
 	}
 
 	err = conn.QueryRow(context.Background(), `
-        INSERT INTO task(name, description)
-        VALUES ($1, $2) RETURNING id`,
+        INSERT INTO task(name, description, status)
+        VALUES ($1, $2, $3) RETURNING id`,
 		name,
 		description,
+		StatusCreated,
 	).Scan(&id)
 
 	if err != nil {
