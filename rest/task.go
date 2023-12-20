@@ -27,8 +27,6 @@ func GetTaskOffset(c *gin.Context) {
 		limit = uint8(limitI)
 	}
 
-	fmt.Println(offset, limit)
-
 	res, err := controller.GetTaskOffset(offset, limit)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
@@ -63,8 +61,12 @@ func CreateTask(c *gin.Context) {
 	}
 
 	name := bodyData["name"].(string)
+	var description string
+	if bodyData["description"] != nil {
+		description = bodyData["description"].(string)
+	}
 
-	id, err := controller.CreateTask(name)
+	id, err := controller.CreateTask(name, description)
 	if err != nil {
 		errMsg := err.Error()
 		if errMsg == "create_task_failure_name_is_required" {

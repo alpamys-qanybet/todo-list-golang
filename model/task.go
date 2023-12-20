@@ -2,15 +2,16 @@ package model
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"todo/db"
 )
 
 type Task struct {
-	Id   uint16 `json:"id,omitempty"`
-	Name string `json:"name,omitempty"`
+	Id   uint16 `json:"id"`
+	Name string `json:"name"`
 	// Status			string	`json:"status,omitempty"`
-	// Description		string	`json:"description,omitempty"`
+	Description string `json:"description"`
 }
 
 const StatusCreated string = "created"
@@ -48,7 +49,7 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 	var result []*Task = []*Task{}
 
 	rows, err := conn.Query(context.Background(), `
-        SELECT id, name
+        SELECT id, name, description
         FROM task
     `)
 	if err != nil {
@@ -57,14 +58,18 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 	defer rows.Close()
 
 	for rows.Next() {
-		// var id uint16
-		// var name string
 		var item Task
+		var description sql.NullString
 
-		// err = rows.Scan(&id, &name)
-		err = rows.Scan(&item.Id, &item.Name)
+		err = rows.Scan(&item.Id, &item.Name, &description)
 		if err != nil {
 			return nil, err
+		}
+
+		if description.Valid {
+			if len(description.String) > 0 {
+				item.Description = description.String
+			}
 		}
 
 		result = append(result, &item)
@@ -108,7 +113,7 @@ func GetStatusList() ([]*Status, error) {
 	return result, err
 }
 
-func CreateTask(name string) (uint16, error) {
+func CreateTask(name, description string) (uint16, error) {
 	var id uint16
 
 	conn, err := db.ConnectionPool()
@@ -117,9 +122,10 @@ func CreateTask(name string) (uint16, error) {
 	}
 
 	err = conn.QueryRow(context.Background(), `
-        INSERT INTO task(name)
-        VALUES ($1) RETURNING id`,
+        INSERT INTO task(name, description)
+        VALUES ($1, $2) RETURNING id`,
 		name,
+		description,
 	).Scan(&id)
 
 	if err != nil {

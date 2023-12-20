@@ -2,7 +2,6 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 	"todo/model"
 )
@@ -17,8 +16,6 @@ func GetTaskOffset(offset uint16, limit uint8) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("task controller", list)
 
 	data := map[string]interface{}{
 		"totalElements": totalElements,
@@ -37,10 +34,10 @@ func GetTaskStatusList() (interface{}, error) {
 	return list, nil
 }
 
-func CreateTask(name string) (uint16, error) {
+func CreateTask(name, description string) (uint16, error) {
 	if strings.Trim(name, " ") == "" {
 		return uint16(0), errors.New("create_task_failure_name_is_required")
 	}
 
-	return model.CreateTask(name)
+	return model.CreateTask(name, description)
 }
