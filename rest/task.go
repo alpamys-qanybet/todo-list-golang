@@ -165,3 +165,65 @@ func DoneTask(c *gin.Context) {
 		"data": true,
 	})
 }
+
+func DeleteTask(c *gin.Context) {
+	fmt.Println("DeleteTask")
+	id := controller.StringToUint16(c.Param("id"))
+	fmt.Println(id)
+
+	err := controller.DeleteTask(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}
+
+func RestoreTask(c *gin.Context) {
+	fmt.Println("RestoreTask")
+	id := controller.StringToUint16(c.Param("id"))
+	fmt.Println(id)
+
+	err := controller.RestoreTask(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}
+
+func DeleteTaskCompletely(c *gin.Context) {
+	fmt.Println("DeleteTaskCompletely")
+	id := controller.StringToUint16(c.Param("id"))
+	fmt.Println(id)
+
+	err := controller.DeleteTaskCompletely(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}
+
+func FreeTaskTrash(c *gin.Context) {
+	fmt.Println("FreeTaskTrash")
+
+	err := controller.FreeTaskTrash()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data": true,
+	})
+}

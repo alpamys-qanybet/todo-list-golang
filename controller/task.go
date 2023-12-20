@@ -61,3 +61,19 @@ func PauseTask(id uint16) error {
 func DoneTask(id uint16) error {
 	return model.DoneTask(id)
 }
+
+func DeleteTask(id uint16) error {
+	return model.DeleteTask(id)
+}
+
+func RestoreTask(id uint16) error {
+	return model.RestoreTask(id)
+}
+
+func DeleteTaskCompletely(id uint16) error {
+	return model.DeleteTaskCompletely(id)
+}
+
+func FreeTaskTrash() error {
+	return model.FreeTaskTrash()
+}

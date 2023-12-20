@@ -208,3 +208,67 @@ func DoneTask(id uint16) error {
 
 	return err
 }
+
+func DeleteTask(id uint16) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		UPDATE task
+		SET status = $1
+		WHERE id = $2`,
+		statusDeleted,
+		id,
+	)
+
+	return err
+}
+
+func RestoreTask(id uint16) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		UPDATE task
+		SET status = $1
+		WHERE id = $2`,
+		statusCreated, // ? maybe we should use in progress status or paused
+		id,
+	)
+
+	return err
+}
+
+func DeleteTaskCompletely(id uint16) error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		DELETE FROM task
+		WHERE id = $1`,
+		id,
+	)
+
+	return err
+}
+
+func FreeTaskTrash() error {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return err
+	}
+
+	_, err = conn.Exec(context.Background(), `
+		DELETE FROM task
+		WHERE status = $1`,
+		statusDeleted,
+	)
+
+	return err
+}

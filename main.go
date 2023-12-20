@@ -63,6 +63,10 @@ func main() {
 	r.PUT("/rest/task/:id/start_progress", rest.StartTaskProgress)
 	r.PUT("/rest/task/:id/pause", rest.PauseTask)
 	r.PUT("/rest/task/:id/done", rest.DoneTask)
+	r.DELETE("/rest/task/:id", rest.DeleteTask) // only changes status to 'deleted'
+	r.PUT("/rest/task/:id/restore", rest.RestoreTask)
+	r.DELETE("/rest/task/:id/completely", rest.DeleteTaskCompletely)
+	r.DELETE("/rest/task/free_trash", rest.FreeTaskTrash)
 
 	r.Run(serverHost + ":" + serverPort)
 
