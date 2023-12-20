@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 	"todo/model"
 )
 
@@ -35,4 +37,10 @@ func GetTaskStatusList() (interface{}, error) {
 	return list, nil
 }
 
+func CreateTask(name string) (uint16, error) {
+	if strings.Trim(name, " ") == "" {
+		return uint16(0), errors.New("create_task_failure_name_is_required")
+	}
 
+	return model.CreateTask(name)
+}

@@ -76,7 +76,6 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 	return result, err
 }
 
-
 func GetStatusList() ([]*Status, error) {
 	conn, err := db.ConnectionPool()
 	if err != nil {
@@ -107,4 +106,25 @@ func GetStatusList() ([]*Status, error) {
 	err = rows.Err()
 
 	return result, err
+}
+
+func CreateTask(name string) (uint16, error) {
+	var id uint16
+
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return id, err
+	}
+
+	err = conn.QueryRow(context.Background(), `
+        INSERT INTO task(name)
+        VALUES ($1) RETURNING id`,
+		name,
+	).Scan(&id)
+
+	if err != nil {
+		return id, err
+	}
+
+	return id, nil
 }

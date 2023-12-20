@@ -58,6 +58,7 @@ func main() {
 	r.GET("/rest/todo", rest.TodoList)
 	r.GET("/rest/task/offset", rest.GetTaskOffset)
 	r.GET("/rest/task/status", rest.GetTaskStatusList)
+	r.POST("/rest/task", rest.CreateTask)
 
 	r.Run(serverHost + ":" + serverPort)
 

@@ -53,3 +53,31 @@ func GetTaskStatusList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, res)
 }
+
+func CreateTask(c *gin.Context) {
+	var bodyData map[string]interface{}
+	err := extractBody(c, &bodyData)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, "invalid body param(s)")
+		return
+	}
+
+	name := bodyData["name"].(string)
+
+	id, err := controller.CreateTask(name)
+	if err != nil {
+		errMsg := err.Error()
+		if errMsg == "create_task_failure_name_is_required" {
+			c.JSON(http.StatusUnprocessableEntity, errMsg)
+			return
+		}
+		c.JSON(http.StatusInternalServerError, errMsg)
+		return
+	}
+
+	data := gin.H{
+		"id": id,
+	}
+
+	c.JSON(http.StatusOK, data)
+}
