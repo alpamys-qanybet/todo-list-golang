@@ -21,7 +21,7 @@ const statusDone string = "done"
 const statusDeleted string = "deleted"
 
 type Status struct {
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 }
 
 func GetTaskTotalElements() (uint32, error) {
@@ -33,9 +33,10 @@ func GetTaskTotalElements() (uint32, error) {
 	var result uint32
 
 	err = conn.QueryRow(context.Background(), `
-        SELECT COUNT(*) AS _c
-        FROM task
-    `).Scan(&result)
+		SELECT COUNT(*) AS _c
+		FROM task
+		WHERE status <> $1
+	`, statusDeleted).Scan(&result)
 
 	return result, err
 }
@@ -49,9 +50,10 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 	var result []*Task = []*Task{}
 
 	rows, err := conn.Query(context.Background(), `
-        SELECT id, name, description, status
-        FROM task
-    `)
+		SELECT id, name, description, status
+		FROM task
+		WHERE status <> $1
+	`, statusDeleted)
 	if err != nil {
 		return nil, err
 	}
