@@ -14,17 +14,17 @@ type Task struct {
 	Description string `json:"description"`
 }
 
-const statusCreated string = "created"
-const statusInProgress string = "in_progress"
-const statusPaused string = "paused"
-const statusDone string = "done"
-const statusDeleted string = "deleted"
+const StatusCreated string = "created"
+const StatusInProgress string = "in_progress"
+const StatusPaused string = "paused"
+const StatusDone string = "done"
+const StatusDeleted string = "deleted"
 
 type Status struct {
 	Name string `json:"name"`
 }
 
-func GetTaskTotalElements(deleted bool) (uint32, error) {
+func GetTaskTotalElements(status string) (uint32, error) {
 	conn, err := db.ConnectionPool()
 	if err != nil {
 		return 0, err
@@ -37,18 +37,20 @@ func GetTaskTotalElements(deleted bool) (uint32, error) {
 		FROM task
 	`
 
-	if deleted {
-		sqlQuery += "WHERE status = $1"
+	if len(status) > 0 {
+		sqlQuery += "WHERE status = '" + status + "'"
 	} else {
-		sqlQuery += "WHERE status <> $1"
+		sqlQuery += "WHERE status <> '" + StatusDeleted + "'" // by default show all and ignore deleted
 	}
 
-	err = conn.QueryRow(context.Background(), sqlQuery, statusDeleted).Scan(&result)
+	fmt.Println(sqlQuery)
+
+	err = conn.QueryRow(context.Background(), sqlQuery).Scan(&result)
 
 	return result, err
 }
 
-func GetTaskListByOffset(offset uint16, limit uint8, deleted bool) ([]*Task, error) {
+func GetTaskListByOffset(offset uint16, limit uint8, status string) ([]*Task, error) {
 	conn, err := db.ConnectionPool()
 	if err != nil {
 		return nil, err
@@ -61,13 +63,14 @@ func GetTaskListByOffset(offset uint16, limit uint8, deleted bool) ([]*Task, err
 		FROM task
 	`
 
-	if deleted {
-		sqlQuery += "WHERE status = $1"
+	if len(status) > 0 {
+		sqlQuery += "WHERE status = '" + status + "'"
 	} else {
-		sqlQuery += "WHERE status <> $1"
+		sqlQuery += "WHERE status <> '" + StatusDeleted + "'" // by default show all and ignore deleted
 	}
+	fmt.Println(sqlQuery)
 
-	rows, err := conn.Query(context.Background(), sqlQuery, statusDeleted)
+	rows, err := conn.Query(context.Background(), sqlQuery)
 	if err != nil {
 		return nil, err
 	}
@@ -142,7 +145,7 @@ func CreateTask(name, description string) (uint16, error) {
 		VALUES ($1, $2, $3) RETURNING id`,
 		name,
 		description,
-		statusCreated,
+		StatusCreated,
 	).Scan(&id)
 
 	if err != nil {
@@ -184,7 +187,7 @@ func StartTaskProgress(id uint16) error {
 		UPDATE task
 		SET status = $1
 		WHERE id = $2`,
-		statusInProgress,
+		StatusInProgress,
 		id,
 	)
 
@@ -201,7 +204,7 @@ func PauseTask(id uint16) error {
 		UPDATE task
 		SET status = $1
 		WHERE id = $2`,
-		statusPaused,
+		StatusPaused,
 		id,
 	)
 
@@ -218,7 +221,7 @@ func DoneTask(id uint16) error {
 		UPDATE task
 		SET status = $1
 		WHERE id = $2`,
-		statusDone,
+		StatusDone,
 		id,
 	)
 
@@ -235,7 +238,7 @@ func DeleteTask(id uint16) error {
 		UPDATE task
 		SET status = $1
 		WHERE id = $2`,
-		statusDeleted,
+		StatusDeleted,
 		id,
 	)
 
@@ -252,7 +255,7 @@ func RestoreTask(id uint16) error {
 		UPDATE task
 		SET status = $1
 		WHERE id = $2`,
-		statusCreated, // ? maybe we should use in progress status or paused
+		StatusCreated, // ? maybe we should use in progress status or paused
 		id,
 	)
 
@@ -283,7 +286,7 @@ func FreeTaskTrash() error {
 	_, err = conn.Exec(context.Background(), `
 		DELETE FROM task
 		WHERE status = $1`,
-		statusDeleted,
+		StatusDeleted,
 	)
 
 	return err

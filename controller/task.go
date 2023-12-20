@@ -6,13 +6,20 @@ import (
 	"todo/model"
 )
 
-func GetTaskOffset(offset uint16, limit uint8, deleted bool) (interface{}, error) {
-	totalElements, err := model.GetTaskTotalElements(deleted)
+func GetTaskOffset(offset uint16, limit uint8, status string) (interface{}, error) {
+	if len(status) > 0 {
+		if !(status == model.StatusCreated || status == model.StatusInProgress || status == model.StatusPaused || status == model.StatusDone || status == model.StatusDeleted) {
+			// it is not one of our statuses, user just mistyped something else
+			status = ""
+		}
+	}
+
+	totalElements, err := model.GetTaskTotalElements(status)
 	if err != nil {
 		return nil, err
 	}
 
-	list, err := model.GetTaskListByOffset(offset, limit, deleted)
+	list, err := model.GetTaskListByOffset(offset, limit, status)
 	if err != nil {
 		return nil, err
 	}

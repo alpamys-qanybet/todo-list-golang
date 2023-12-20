@@ -27,16 +27,11 @@ func GetTaskOffset(c *gin.Context) {
 		limit = uint8(limitI)
 	}
 
-	deleted := false
-	deleted, err = strconv.ParseBool(c.Query("deleted"))
-	if err != nil {
-		// do nothing
-	}
+	status := c.Query("status")
+	fmt.Println("status")
+	fmt.Println(status)
 
-	fmt.Println("deleted")
-	fmt.Println(deleted)
-
-	res, err := controller.GetTaskOffset(offset, limit, deleted)
+	res, err := controller.GetTaskOffset(offset, limit, status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
