@@ -6,13 +6,13 @@ import (
 	"todo/model"
 )
 
-func GetTaskOffset(offset uint16, limit uint8) (interface{}, error) {
-	totalElements, err := model.GetTaskTotalElements()
+func GetTaskOffset(offset uint16, limit uint8, deleted bool) (interface{}, error) {
+	totalElements, err := model.GetTaskTotalElements(deleted)
 	if err != nil {
 		return nil, err
 	}
 
-	list, err := model.GetTaskListByOffset(offset, limit)
+	list, err := model.GetTaskListByOffset(offset, limit, deleted)
 	if err != nil {
 		return nil, err
 	}

@@ -24,7 +24,7 @@ type Status struct {
 	Name string `json:"name"`
 }
 
-func GetTaskTotalElements() (uint32, error) {
+func GetTaskTotalElements(deleted bool) (uint32, error) {
 	conn, err := db.ConnectionPool()
 	if err != nil {
 		return 0, err
@@ -32,16 +32,23 @@ func GetTaskTotalElements() (uint32, error) {
 
 	var result uint32
 
-	err = conn.QueryRow(context.Background(), `
+	sqlQuery := `
 		SELECT COUNT(*) AS _c
 		FROM task
-		WHERE status <> $1
-	`, statusDeleted).Scan(&result)
+	`
+
+	if deleted {
+		sqlQuery += "WHERE status = $1"
+	} else {
+		sqlQuery += "WHERE status <> $1"
+	}
+
+	err = conn.QueryRow(context.Background(), sqlQuery, statusDeleted).Scan(&result)
 
 	return result, err
 }
 
-func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
+func GetTaskListByOffset(offset uint16, limit uint8, deleted bool) ([]*Task, error) {
 	conn, err := db.ConnectionPool()
 	if err != nil {
 		return nil, err
@@ -49,11 +56,18 @@ func GetTaskListByOffset(offset uint16, limit uint8) ([]*Task, error) {
 
 	var result []*Task = []*Task{}
 
-	rows, err := conn.Query(context.Background(), `
+	sqlQuery := `
 		SELECT id, name, description, status
 		FROM task
-		WHERE status <> $1
-	`, statusDeleted)
+	`
+
+	if deleted {
+		sqlQuery += "WHERE status = $1"
+	} else {
+		sqlQuery += "WHERE status <> $1"
+	}
+
+	rows, err := conn.Query(context.Background(), sqlQuery, statusDeleted)
 	if err != nil {
 		return nil, err
 	}
