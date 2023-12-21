@@ -181,6 +181,37 @@ func CreateTask(name, description string) (uint16, error) {
 	return id, nil
 }
 
+func GetTask(id uint16) (*Task, error) {
+	conn, err := db.ConnectionPool()
+	if err != nil {
+		return nil, err
+	}
+
+	var item Task
+	var description sql.NullString
+
+	err = conn.QueryRow(context.Background(), `
+		SELECT id, name, description, status
+		FROM task
+		WHERE id = $1
+	`, id).Scan(&item.Id, &item.Name, &description, &item.Status)
+	if err != nil {
+		return nil, err
+	}
+
+	if description.Valid {
+		if len(description.String) > 0 {
+			item.Description = description.String
+		}
+	}
+
+	if config.DebugLog() {
+		log.Println("get task: successfully retrieved data in db")
+	}
+
+	return &item, nil
+}
+
 func EditTask(id uint16, name, description string) error {
 	conn, err := db.ConnectionPool()
 	if err != nil {

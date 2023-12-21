@@ -54,6 +54,10 @@ func CreateTask(name, description string) (uint16, error) {
 	return model.CreateTask(name, description)
 }
 
+func GetTask(id uint16) (*model.Task, error) {
+	return model.GetTask(id)
+}
+
 func EditTask(id uint16, name, description string) error {
 	if strings.Trim(name, " ") == "" {
 		return errors.New("edit_task_failure_name_is_required")

@@ -102,7 +102,27 @@ func CreateTask(c *gin.Context) {
 		"id": id,
 	}
 
-	c.JSON(http.StatusOK, data)
+	c.JSON(http.StatusCreated, data)
+}
+
+func GetTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
+	if config.DebugLog() {
+		log.Println("requesting task by id", fullUrl(c))
+	}
+
+	id := controller.StringToUint16(c.Param("id"))
+
+	res, err := controller.GetTask(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
 }
 
 func EditTask(c *gin.Context) {

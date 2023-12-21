@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	appSecretName      = "app_secret"
+	AppSecretName      = "app_secret"
 	appSecretIncorrect = "INCORRECT_SECRET"
 )
 
@@ -36,14 +36,14 @@ func extractBody(c *gin.Context, data *map[string]interface{}) error {
 }
 
 func appSecretIsValid(c *gin.Context) bool {
-	secret := c.Query(appSecretName)
+	secret := c.Query(AppSecretName)
 
 	if secret != AppSecret() {
 		if config.DebugLog() {
 			log.Printf("app secret is incorrect '%s', must be '%s'", secret, AppSecret())
 		}
 
-		c.JSON(http.StatusOK, gin.H{
+		c.JSON(http.StatusBadRequest, gin.H{
 			"data": appSecretIncorrect,
 		})
 
