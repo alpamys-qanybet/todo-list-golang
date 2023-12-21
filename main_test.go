@@ -17,6 +17,7 @@ import (
 )
 
 var id uint16 // created task id to further tests
+var token string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfY29udGVudCI6MSwiX3RpbWUiOjE3MDMxNzU3NDQ3MTIsIl90b2tlbl9pZCI6ImExMTY3MmE1LTdhNmEtNGZiMi05MDIwLWVkMGEwMTNmZjI4OCJ9.iqzPRTxJwXv6OXlCE4RslhEIPvDUJbwpqSWpB2mY2Uw"
 
 func TestNewTask(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
@@ -39,7 +40,7 @@ func TestNewTask(t *testing.T) {
 
 	jsonValue, _ := json.Marshal(bodyData)
 	req, _ := http.NewRequest("POST", "/rest/task?"+rest.AppSecretName+"="+rest.AppSecret(), bytes.NewBuffer(jsonValue))
-
+	req.Header.Add("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 	assert.Equal(t, http.StatusCreated, w.Code)
@@ -107,6 +108,7 @@ func TestEditTask(t *testing.T) {
 		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
 		bytes.NewBuffer(jsonValue),
 	)
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
@@ -147,6 +149,7 @@ func TestStartTaskProgress(t *testing.T) {
 		"/rest/task/"+strconv.Itoa(int(id))+"/start_progress?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
 	)
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
@@ -186,6 +189,7 @@ func TestPauseTask(t *testing.T) {
 		"/rest/task/"+strconv.Itoa(int(id))+"/pause?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
 	)
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
@@ -224,6 +228,7 @@ func TestDoneTask(t *testing.T) {
 		"/rest/task/"+strconv.Itoa(int(id))+"/done?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
 	)
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
@@ -263,6 +268,7 @@ func TestDeleteTask(t *testing.T) {
 		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
 	)
+	req.Header.Add("Authorization", "Bearer "+token)
 
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
