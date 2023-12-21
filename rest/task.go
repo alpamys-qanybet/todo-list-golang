@@ -3,7 +3,9 @@ package rest
 import (
 	"log"
 	"net/http"
-	"strconv"
+	// "strconv"
+
+	_ "todo/docs"
 
 	"todo/config"
 	"todo/controller"
@@ -11,26 +13,38 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// GetTaskOffset godoc
+// @ID get-task-list
+// @Summary      Get task list
+// @Description  Get task list
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Success 200 {array} model.Task
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task [get]
 func GetTaskOffset(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	var offset uint16
 	var limit uint8
-	offsetI, err := strconv.Atoi(c.Query("offset"))
-	if err != nil {
-		offset = uint16(0)
-	} else {
-		offset = uint16(offsetI)
-	}
+	// offsetI, err := strconv.Atoi(c.Query("offset"))
+	// if err != nil {
+	offset = uint16(0)
+	// } else {
+	// 	offset = uint16(offsetI)
+	// }
 
-	limitI, err := strconv.Atoi(c.Query("limit"))
-	if err != nil {
-		limit = uint8(50)
-	} else {
-		limit = uint8(limitI)
-	}
+	// limitI, err := strconv.Atoi(c.Query("limit"))
+	// if err != nil {
+	limit = uint8(50)
+	// } else {
+	// 	limit = uint8(limitI)
+	// }
 
 	status := c.Query("status")
 
@@ -47,10 +61,22 @@ func GetTaskOffset(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// GetTaskStatusList godoc
+// @ID get-task-status-list
+// @Summary      Get task status list
+// @Description  Get task status list
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Success 200 {array} model.Status
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/status [get]
 func GetTaskStatusList(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	if config.DebugLog() {
 		log.Println("requesting task status list", fullUrl(c))
@@ -65,10 +91,24 @@ func GetTaskStatusList(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// CreateTask godoc
+// @ID create-task
+// @Security ApiKeyAuth
+// @Summary      Create task
+// @Description  Create task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param input body todo.Model true "task input name,description"
+// @Success 201 {object} model.Task
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task [post]
 func CreateTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -111,10 +151,23 @@ func CreateTask(c *gin.Context) {
 	c.JSON(http.StatusCreated, data)
 }
 
+// GetTask godoc
+// @ID get-task
+// @Summary      Get task
+// @Description  Get task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id"
+// @Success	200 {object} model.Task
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id} [get]
 func GetTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	if config.DebugLog() {
 		log.Println("requesting task by id", fullUrl(c))
@@ -131,10 +184,25 @@ func GetTask(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// EditTask godoc
+// @ID edit-task
+// @Security ApiKeyAuth
+// @Summary      Edit task
+// @Description  Edit task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id"
+// @Param input body todo.Model true "task input name,description"
+// @Success	200 {object} 
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id} [put]
 func EditTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -177,10 +245,24 @@ func EditTask(c *gin.Context) {
 	})
 }
 
+// StartTaskProgress godoc
+// @ID start-task-progress
+// @Security ApiKeyAuth
+// @Summary      Start task progress
+// @Description  Start task progress
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id" default(1)
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id}/start_progress [put]
 func StartTaskProgress(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -205,10 +287,24 @@ func StartTaskProgress(c *gin.Context) {
 	})
 }
 
+// PauseTask godoc
+// @ID pause-task
+// @Security ApiKeyAuth
+// @Summary      Pause task
+// @Description  Pause task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id" default(1)
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id}/pause [put]
 func PauseTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -233,10 +329,24 @@ func PauseTask(c *gin.Context) {
 	})
 }
 
+// DoneTask godoc
+// @ID done-task
+// @Security ApiKeyAuth
+// @Summary      Done task
+// @Description  Done task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id" default(1)
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id}/done [put]
 func DoneTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -261,10 +371,24 @@ func DoneTask(c *gin.Context) {
 	})
 }
 
+// DeleteTask godoc
+// @ID delete-task
+// @Security ApiKeyAuth
+// @Summary      Delete task
+// @Description  Delete task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id" default(1)
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id} [delete]
 func DeleteTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -289,10 +413,24 @@ func DeleteTask(c *gin.Context) {
 	})
 }
 
+// RestoreTask godoc
+// @ID restore-task
+// @Security ApiKeyAuth
+// @Summary      Restore task
+// @Description  Restore task
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id" default(1)
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id}/restore [put]
 func RestoreTask(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -317,10 +455,24 @@ func RestoreTask(c *gin.Context) {
 	})
 }
 
+// DeleteTask godoc
+// @ID delete-task-completely
+// @Security ApiKeyAuth
+// @Summary      Delete task completely
+// @Description  Delete task completely
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Param id path int true "task id" default(1)
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/{id}/completely [delete]
 func DeleteTaskCompletely(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {
@@ -345,10 +497,23 @@ func DeleteTaskCompletely(c *gin.Context) {
 	})
 }
 
+// FreeTaskTrash godoc
+// @ID free-task-trash
+// @Security ApiKeyAuth
+// @Summary      Free task trash
+// @Description  Free task trash
+// @Tags         task
+// @Accept       json
+// @Produce      json
+// @Success	200 {object}
+// @Failure      400  {object}  http.StatusBadRequest
+// @Failure      500  {object}  http.StatusInternalServerError
+
+// @Router       /task/free_trash [delete]
 func FreeTaskTrash(c *gin.Context) {
-	if !appSecretIsValid(c) {
-		return
-	}
+	// if !appSecretIsValid(c) {
+	// 	return
+	// }
 
 	_, err := authorizeToken(c)
 	if err != nil {

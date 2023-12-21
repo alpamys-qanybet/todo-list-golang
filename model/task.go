@@ -11,9 +11,9 @@ import (
 
 type Task struct {
 	Id          uint16 `json:"id"`
-	Name        string `json:"name"`
+	Name        string `json:"name" example:"New Task"`
 	Status      string `json:"status"`
-	Description string `json:"description"`
+	Description string `json:"description" example:"Lorum ipsum"`
 }
 
 const (

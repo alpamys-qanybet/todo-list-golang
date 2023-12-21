@@ -10,7 +10,7 @@ import (
 	"testing"
 	"todo/config"
 	"todo/model"
-	"todo/rest"
+	// "todo/rest"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4/pgxpool"
@@ -42,7 +42,8 @@ func TestNewTask(t *testing.T) {
 	}
 
 	jsonValue, _ := json.Marshal(bodyData)
-	req, _ := http.NewRequest("POST", "/rest/task?"+rest.AppSecretName+"="+rest.AppSecret(), bytes.NewBuffer(jsonValue))
+	// req, _ := http.NewRequest("POST", "/rest/task?"+rest.AppSecretName+"="+rest.AppSecret(), bytes.NewBuffer(jsonValue))
+	req, _ := http.NewRequest("POST", "/rest/task", bytes.NewBuffer(jsonValue))
 	req.Header.Add("Authorization", "Bearer "+token)
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
@@ -56,7 +57,8 @@ func TestNewTask(t *testing.T) {
 
 func TestGetTask(t *testing.T) {
 	req, _ := http.NewRequest("GET",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 
@@ -80,7 +82,8 @@ func TestEditTask(t *testing.T) {
 
 	jsonValue, _ := json.Marshal(bodyData)
 	req, _ := http.NewRequest("PUT",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		bytes.NewBuffer(jsonValue),
 	)
 	req.Header.Add("Authorization", "Bearer "+token)
@@ -90,7 +93,8 @@ func TestEditTask(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	req, _ = http.NewRequest("GET",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 
@@ -107,7 +111,8 @@ func TestEditTask(t *testing.T) {
 
 func TestStartTaskProgress(t *testing.T) {
 	req, _ := http.NewRequest("PUT",
-		"/rest/task/"+strconv.Itoa(int(id))+"/start_progress?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"/start_progress?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id))+"/start_progress",
 		nil,
 	)
 	req.Header.Add("Authorization", "Bearer "+token)
@@ -117,7 +122,8 @@ func TestStartTaskProgress(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	req, _ = http.NewRequest("GET",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 
@@ -133,7 +139,8 @@ func TestStartTaskProgress(t *testing.T) {
 
 func TestPauseTask(t *testing.T) {
 	req, _ := http.NewRequest("PUT",
-		"/rest/task/"+strconv.Itoa(int(id))+"/pause?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"/pause?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id))+"/pause",
 		nil,
 	)
 	req.Header.Add("Authorization", "Bearer "+token)
@@ -143,7 +150,8 @@ func TestPauseTask(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	req, _ = http.NewRequest("GET",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 
@@ -158,7 +166,8 @@ func TestPauseTask(t *testing.T) {
 }
 func TestDoneTask(t *testing.T) {
 	req, _ := http.NewRequest("PUT",
-		"/rest/task/"+strconv.Itoa(int(id))+"/done?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"/done?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id))+"/done",
 		nil,
 	)
 	req.Header.Add("Authorization", "Bearer "+token)
@@ -168,7 +177,8 @@ func TestDoneTask(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	req, _ = http.NewRequest("GET",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 
@@ -186,7 +196,8 @@ func TestDeleteTask(t *testing.T) {
 	defer dbpool.Close()
 
 	req, _ := http.NewRequest("DELETE",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 	req.Header.Add("Authorization", "Bearer "+token)
@@ -196,7 +207,8 @@ func TestDeleteTask(t *testing.T) {
 	assert.Equal(t, http.StatusOK, w.Code)
 
 	req, _ = http.NewRequest("GET",
-		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		// "/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
+		"/rest/task/"+strconv.Itoa(int(id)),
 		nil,
 	)
 

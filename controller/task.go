@@ -19,22 +19,24 @@ func GetTaskOffset(offset uint16, limit uint8, status string) (interface{}, erro
 		}
 	}
 
-	totalElements, err := model.GetTaskTotalElements(status)
-	if err != nil {
-		return nil, err
-	}
+	// totalElements, err := model.GetTaskTotalElements(status)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	list, err := model.GetTaskListByOffset(offset, limit, status)
 	if err != nil {
 		return nil, err
 	}
 
-	data := map[string]interface{}{
-		"totalElements": totalElements,
-		"list":          list,
-	}
+	// data := map[string]interface{}{
+	// 	"totalElements": totalElements,
+	// 	"list":          list,
+	// }
 
-	return data, nil
+	// return data, nil
+
+	return list, nil
 }
 
 func GetTaskStatusList() (interface{}, error) {

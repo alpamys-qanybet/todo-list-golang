@@ -1,0 +1,85 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample todo app.",
+        "title": "Todo app API",
+        "contact": {
+            "name": "Alpamys Kanibetov",
+            "email": "alpamys.kanibetov@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "basePath": "/rest",
+    "paths": {
+        "/task": {
+            "get": {
+                "responses": {}
+            },
+            "post": {
+                "responses": {}
+            }
+        },
+        "/task/free_trash": {
+            "delete": {
+                "responses": {}
+            }
+        },
+        "/task/status": {
+            "get": {
+                "responses": {}
+            }
+        },
+        "/task/{id}": {
+            "get": {
+                "responses": {}
+            },
+            "put": {
+                "responses": {}
+            },
+            "delete": {
+                "responses": {}
+            }
+        },
+        "/task/{id}/completely": {
+            "delete": {
+                "responses": {}
+            }
+        },
+        "/task/{id}/done": {
+            "put": {
+                "responses": {}
+            }
+        },
+        "/task/{id}/pause": {
+            "put": {
+                "responses": {}
+            }
+        },
+        "/task/{id}/restore": {
+            "put": {
+                "responses": {}
+            }
+        },
+        "/task/{id}/start_progress": {
+            "put": {
+                "responses": {}
+            }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "externalDocs": {
+        "description": "OpenAPI",
+        "url": "https://swagger.io/resources/open-api/"
+    }
+}

@@ -24,13 +24,13 @@ env sample:
 ```
 SERVER_HOST=localhost
 # optional, default: "", empty string is localhost
-SERVER_PORT=9292
-# optional, default: 9292
+SERVER_PORT=8080
+# optional, default: 8080
 
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/todo
 # optional, default: postgresql://postgres:postgres@localhost:5432/todo
 
-APP_SECRET=kj3mSJbsw4lpFWUsHasQZf9r
+# APP_SECRET=kj3mSJbsw4lpFWUsHasQZf9r
 # required
 
 JWT_SECRET=L9C98ouj2SXUyRcz4HRn2sBwIIY5trlzIOyVkcBntWETBz7e4kbIYZwAuVyIBNkyw
@@ -50,7 +50,7 @@ run `sudo docker run --network host todo-app` to launch app
  [Postman](https://api.postman.com/collections/459354-d9a68bfc-5acf-4755-9ae3-22b6b106b1d8?access_key=PMAT-01HJ64NV55Q2R8ZF3C8R8RR1MG)
  - `GET "/rest"` RootIndex
  - `POST "/rest/user/login"` UserLogin
- - `GET "/rest/task/offset"` GetTaskOffset
+ - `GET "/rest/task"` GetTaskList(query param status is optional, filters by status)
  - `GET "/rest/task/status"` GetTaskStatusList
  - `POST "/rest/task"` CreateTask
  - `GET "/rest/task/:id"` GetTask
@@ -63,3 +63,15 @@ run `sudo docker run --network host todo-app` to launch app
  - `DELETE "/rest/task/:id/completely"` DeleteTaskCompletely
  - `DELETE "/rest/task/free_trash"` FreeTaskTrash
  
+
+ 
+ ### Unit tests
+ run `go test -v` in root folder
+
+
+### Swagger
+run `swag init`
+
+and then `go run main.go`
+
+url `http://localhost:8080/docs/index.html`
