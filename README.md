@@ -3,6 +3,7 @@
 ## Installation
 - [GoLang](https://go.dev/doc/install)
 - [PostgreSql](https://www.postgresql.org)
+- [Docker](https://docs.docker.com/engine/install/)
 
 ### Setup
 
@@ -35,3 +36,14 @@ APP_SECRET=kj3mSJbsw4lpFWUsHasQZf9r
 DEBUG=true
 # optional, default false
 ```
+
+### Docker
+run `sudo docker build -t todo-app .` to build an image container
+
+run `sudo docker run --network host todo-app` to launch app
+
+
+### Urls
+ - [Postman](https://api.postman.com/collections/459354-d9a68bfc-5acf-4755-9ae3-22b6b106b1d8?access_key=PMAT-01HJ64NV55Q2R8ZF3C8R8RR1MG)
+
+ 
