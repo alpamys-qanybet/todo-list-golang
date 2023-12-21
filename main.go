@@ -68,6 +68,13 @@ func main() {
 	}
 	defer dbpool.Close()
 
+	err = db.CreateDatabaseTablesIfNotExists()
+	if err != nil {
+		if config.DebugLog() {
+			log.Fatalf("Error on postgres database tables creation: %v\n", err)
+		}
+	}
+
 	if config.DebugLog() {
 		log.Println("postgres db connected SUCCESSFUL")
 	}
