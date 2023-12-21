@@ -2,7 +2,9 @@ package controller
 
 import (
 	"errors"
+	"log"
 	"strings"
+	"todo/config"
 	"todo/model"
 )
 
@@ -10,6 +12,9 @@ func GetTaskOffset(offset uint16, limit uint8, status string) (interface{}, erro
 	if len(status) > 0 {
 		if !(status == model.StatusCreated || status == model.StatusInProgress || status == model.StatusPaused || status == model.StatusDone || status == model.StatusDeleted) {
 			// it is not one of our statuses, user just mistyped something else
+			if config.DebugLog() {
+				log.Printf("task offset incorrect status: %s", status)
+			}
 			status = ""
 		}
 	}

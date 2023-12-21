@@ -3,7 +3,9 @@ package model
 import (
 	"context"
 	"database/sql"
-	"fmt"
+	"log"
+	"strconv"
+	"todo/config"
 	"todo/db"
 )
 
@@ -45,8 +47,6 @@ func GetTaskTotalElements(status string) (uint32, error) {
 		sqlQuery += "WHERE status <> '" + StatusDeleted + "'" // by default show all and ignore deleted
 	}
 
-	fmt.Println(sqlQuery)
-
 	err = conn.QueryRow(context.Background(), sqlQuery).Scan(&result)
 
 	return result, err
@@ -70,7 +70,14 @@ func GetTaskListByOffset(offset uint16, limit uint8, status string) ([]*Task, er
 	} else {
 		sqlQuery += "WHERE status <> '" + StatusDeleted + "'" // by default show all and ignore deleted
 	}
-	fmt.Println(sqlQuery)
+
+	sqlQuery += " ORDER BY id ASC"
+
+	if offset == 0 && limit == 0 {
+		// do nothing
+	} else {
+		sqlQuery += " LIMIT " + strconv.Itoa(int(limit)) + " OFFSET " + strconv.Itoa(int(offset))
+	}
 
 	rows, err := conn.Query(context.Background(), sqlQuery)
 	if err != nil {
@@ -96,10 +103,15 @@ func GetTaskListByOffset(offset uint16, limit uint8, status string) ([]*Task, er
 		result = append(result, &item)
 	}
 	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
 
-	fmt.Println("returning result")
-	fmt.Println(result)
-	return result, err
+	if config.DebugLog() {
+		log.Println("task list offset: successfully retrived data from db")
+	}
+
+	return result, nil
 }
 
 func GetStatusList() ([]*Status, error) {
@@ -130,8 +142,16 @@ func GetStatusList() ([]*Status, error) {
 		result = append(result, &item)
 	}
 	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
 
-	return result, err
+	if config.DebugLog() {
+		log.Println("task status list: successfully retrived data from db")
+	}
+
+	return result, nil
+
 }
 
 func CreateTask(name, description string) (uint16, error) {
@@ -152,6 +172,10 @@ func CreateTask(name, description string) (uint16, error) {
 
 	if err != nil {
 		return id, err
+	}
+
+	if config.DebugLog() {
+		log.Println("task create: successfully created data in db")
 	}
 
 	return id, nil
@@ -176,6 +200,10 @@ func EditTask(id uint16, name, description string) error {
 		return err
 	}
 
+	if config.DebugLog() {
+		log.Println("task edit: successfully edited data in db")
+	}
+
 	return nil
 }
 
@@ -192,6 +220,10 @@ func StartTaskProgress(id uint16) error {
 		StatusInProgress,
 		id,
 	)
+
+	if config.DebugLog() {
+		log.Println("task start progress: successfully changed status in db")
+	}
 
 	return err
 }
@@ -210,6 +242,10 @@ func PauseTask(id uint16) error {
 		id,
 	)
 
+	if config.DebugLog() {
+		log.Println("task pause: successfully changed status in db")
+	}
+
 	return err
 }
 
@@ -226,6 +262,10 @@ func DoneTask(id uint16) error {
 		StatusDone,
 		id,
 	)
+
+	if config.DebugLog() {
+		log.Println("task done: successfully changed status in db")
+	}
 
 	return err
 }
@@ -244,6 +284,10 @@ func DeleteTask(id uint16) error {
 		id,
 	)
 
+	if config.DebugLog() {
+		log.Println("delete task: successfully deleted task in db")
+	}
+
 	return err
 }
 
@@ -261,6 +305,10 @@ func RestoreTask(id uint16) error {
 		id,
 	)
 
+	if config.DebugLog() {
+		log.Println("restore task: successfully restored task in db")
+	}
+
 	return err
 }
 
@@ -276,6 +324,10 @@ func DeleteTaskCompletely(id uint16) error {
 		id,
 	)
 
+	if config.DebugLog() {
+		log.Println("delete task completely: successfully deleted task in db completely")
+	}
+
 	return err
 }
 
@@ -290,6 +342,10 @@ func FreeTaskTrash() error {
 		WHERE status = $1`,
 		StatusDeleted,
 	)
+
+	if config.DebugLog() {
+		log.Println("free task trash: successfully freed task trash in db")
+	}
 
 	return err
 }

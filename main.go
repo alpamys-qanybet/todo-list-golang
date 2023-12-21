@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"log"
 	"os"
+	"strconv"
+	"todo/config"
 	"todo/db"
 	"todo/rest"
 )
@@ -36,26 +37,43 @@ func readEnvVariables() (serverHost, serverPort string) {
 	}
 	rest.SetAppSecret(appSecret)
 
+	debugStr := os.Getenv("DEBUG")
+	debug := true
+	if "" != debugStr {
+		boolValue, err := strconv.ParseBool(debugStr)
+		if err == nil {
+			debug = boolValue
+		} // error occurred, nevermind
+	}
+	config.SetDebugLog(debug)
+
 	log.Println("environtment variables are read")
 	return
 }
 
 func main() {
-	log.Println("Todo list App init")
+	gin.SetMode(gin.ReleaseMode)
 
 	serverHost, serverPort := readEnvVariables()
 
-	fmt.Println("databaseUrl")
-	fmt.Println(databaseUrl)
+	if config.DebugLog() {
+		log.Println("Todo list App init")
+	}
 
 	dbpool, err := db.Connect(databaseUrl)
 	if err != nil {
-		log.Fatalf("Unable to connect to postgres database: %v\n", err)
+		if config.DebugLog() {
+			log.Fatalf("Unable to connect to postgres database: %v\n", err)
+		}
 	}
-	log.Println("postgres db connected SUCCESSFUL")
 	defer dbpool.Close()
 
-	r := gin.Default()
+	if config.DebugLog() {
+		log.Println("postgres db connected SUCCESSFUL")
+	}
+
+	r := gin.New()
+	r.Use(gin.Recovery()) // recovery middleware
 
 	r.GET("/rest", rest.RootIndex)
 	r.GET("/rest/task/offset", rest.GetTaskOffset)
@@ -72,5 +90,7 @@ func main() {
 
 	r.Run(serverHost + ":" + serverPort)
 
-	log.Println("Todo list App started SUCCESSFULL")
+	if config.DebugLog() {
+		log.Println("Todo list App started SUCCESSFULL")
+	}
 }

@@ -1,10 +1,11 @@
 package rest
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
+	"todo/config"
 	"todo/controller"
 
 	"github.com/gin-gonic/gin"
@@ -32,17 +33,16 @@ func GetTaskOffset(c *gin.Context) {
 	}
 
 	status := c.Query("status")
-	fmt.Println("status")
-	fmt.Println(status)
+
+	if config.DebugLog() {
+		log.Println("requesting task offset", fullUrl(c))
+	}
 
 	res, err := controller.GetTaskOffset(offset, limit, status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	fmt.Println("res")
-	fmt.Println(res)
 
 	c.JSON(http.StatusOK, res)
 }
@@ -52,14 +52,15 @@ func GetTaskStatusList(c *gin.Context) {
 		return
 	}
 
+	if config.DebugLog() {
+		log.Println("requesting task status list", fullUrl(c))
+	}
+
 	res, err := controller.GetTaskStatusList()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
-
-	fmt.Println("res")
-	fmt.Println(res)
 
 	c.JSON(http.StatusOK, res)
 }
@@ -80,6 +81,10 @@ func CreateTask(c *gin.Context) {
 	var description string
 	if bodyData["description"] != nil {
 		description = bodyData["description"].(string)
+	}
+
+	if config.DebugLog() {
+		log.Println("requesting task create", fullUrl(c))
 	}
 
 	id, err := controller.CreateTask(name, description)
@@ -106,7 +111,6 @@ func EditTask(c *gin.Context) {
 	}
 
 	id := controller.StringToUint16(c.Param("id"))
-	// fmt.Println(id)
 
 	var bodyData map[string]interface{}
 	err := extractBody(c, &bodyData)
@@ -120,7 +124,10 @@ func EditTask(c *gin.Context) {
 	if bodyData["description"] != nil {
 		description = bodyData["description"].(string)
 	}
-	// status := bodyData["status"].(string) // implement change status code in another function?
+
+	if config.DebugLog() {
+		log.Println("requesting task edit", fullUrl(c))
+	}
 
 	err = controller.EditTask(id, name, description)
 	if err != nil {
@@ -143,9 +150,11 @@ func StartTaskProgress(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("StartTaskProgress")
 	id := controller.StringToUint16(c.Param("id"))
-	fmt.Println(id)
+
+	if config.DebugLog() {
+		log.Println("requesting task start progress", fullUrl(c))
+	}
 
 	err := controller.StartTaskProgress(id)
 	if err != nil {
@@ -163,9 +172,11 @@ func PauseTask(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("PauseTask")
 	id := controller.StringToUint16(c.Param("id"))
-	fmt.Println(id)
+
+	if config.DebugLog() {
+		log.Println("requesting task pause", fullUrl(c))
+	}
 
 	err := controller.PauseTask(id)
 	if err != nil {
@@ -183,9 +194,11 @@ func DoneTask(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("DoneTask")
 	id := controller.StringToUint16(c.Param("id"))
-	fmt.Println(id)
+
+	if config.DebugLog() {
+		log.Println("requesting task done", fullUrl(c))
+	}
 
 	err := controller.DoneTask(id)
 	if err != nil {
@@ -203,9 +216,11 @@ func DeleteTask(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("DeleteTask")
 	id := controller.StringToUint16(c.Param("id"))
-	fmt.Println(id)
+
+	if config.DebugLog() {
+		log.Println("requesting task delete", fullUrl(c))
+	}
 
 	err := controller.DeleteTask(id)
 	if err != nil {
@@ -223,9 +238,11 @@ func RestoreTask(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("RestoreTask")
 	id := controller.StringToUint16(c.Param("id"))
-	fmt.Println(id)
+
+	if config.DebugLog() {
+		log.Println("requesting task restore", fullUrl(c))
+	}
 
 	err := controller.RestoreTask(id)
 	if err != nil {
@@ -243,9 +260,11 @@ func DeleteTaskCompletely(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("DeleteTaskCompletely")
 	id := controller.StringToUint16(c.Param("id"))
-	fmt.Println(id)
+
+	if config.DebugLog() {
+		log.Println("requesting task delete competely", fullUrl(c))
+	}
 
 	err := controller.DeleteTaskCompletely(id)
 	if err != nil {
@@ -263,7 +282,9 @@ func FreeTaskTrash(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("FreeTaskTrash")
+	if config.DebugLog() {
+		log.Println("requesting free task trash", fullUrl(c))
+	}
 
 	err := controller.FreeTaskTrash()
 	if err != nil {

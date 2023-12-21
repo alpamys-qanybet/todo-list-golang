@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"todo/config"
 )
 
 const (
@@ -37,6 +39,10 @@ func appSecretIsValid(c *gin.Context) bool {
 	secret := c.Query(appSecretName)
 
 	if secret != AppSecret() {
+		if config.DebugLog() {
+			log.Printf("app secret is incorrect '%s', must be '%s'", secret, AppSecret())
+		}
+
 		c.JSON(http.StatusOK, gin.H{
 			"data": appSecretIncorrect,
 		})
@@ -45,6 +51,10 @@ func appSecretIsValid(c *gin.Context) bool {
 	}
 
 	return true
+}
+
+func fullUrl(c *gin.Context) string {
+	return c.Request.Host + c.Request.URL.String()
 }
 
 func RootIndex(c *gin.Context) {
