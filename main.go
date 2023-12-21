@@ -55,7 +55,9 @@ func readEnvVariables() (serverHost, serverPort string) {
 	}
 	config.SetDebugLog(debug)
 
-	log.Println("environtment variables are read")
+	if debug {
+		log.Println("environtment variables are read")
+	}
 	return
 }
 

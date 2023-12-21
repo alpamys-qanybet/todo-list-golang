@@ -13,27 +13,30 @@ import (
 	"todo/rest"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/stretchr/testify/assert"
 )
 
+var dbpool *pgxpool.Pool
+var r *gin.Engine
 var id uint16 // created task id to further tests
 var token string = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfY29udGVudCI6MSwiX3RpbWUiOjE3MDMxNzU3NDQ3MTIsIl90b2tlbl9pZCI6ImExMTY3MmE1LTdhNmEtNGZiMi05MDIwLWVkMGEwMTNmZjI4OCJ9.iqzPRTxJwXv6OXlCE4RslhEIPvDUJbwpqSWpB2mY2Uw"
+var err error
 
 func TestNewTask(t *testing.T) {
 	gin.SetMode(gin.ReleaseMode)
 
 	_, _ = readEnvVariables()
+	config.SetDebugLog(false)
 
-	dbpool, err := ConnectDB()
+	dbpool, err = ConnectDB()
 	if err != nil {
 		if config.DebugLog() {
 			log.Fatalf("Error on postgres database: %v\n", err)
 		}
 	}
-	defer dbpool.Close()
 
-	r := SetupRouter()
-
+	r = SetupRouter()
 	bodyData := map[string]interface{}{
 		"name": "New Task",
 	}
@@ -52,20 +55,6 @@ func TestNewTask(t *testing.T) {
 }
 
 func TestGetTask(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-
-	_, _ = readEnvVariables()
-
-	dbpool, err := ConnectDB()
-	if err != nil {
-		if config.DebugLog() {
-			log.Fatalf("Error on postgres database: %v\n", err)
-		}
-	}
-	defer dbpool.Close()
-
-	r := SetupRouter()
-
 	req, _ := http.NewRequest("GET",
 		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
@@ -84,20 +73,6 @@ func TestGetTask(t *testing.T) {
 }
 
 func TestEditTask(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-
-	_, _ = readEnvVariables()
-
-	dbpool, err := ConnectDB()
-	if err != nil {
-		if config.DebugLog() {
-			log.Fatalf("Error on postgres database: %v\n", err)
-		}
-	}
-	defer dbpool.Close()
-
-	r := SetupRouter()
-
 	bodyData := map[string]interface{}{
 		"name":        "Changed Task",
 		"description": "Lorem ipsum",
@@ -131,20 +106,6 @@ func TestEditTask(t *testing.T) {
 }
 
 func TestStartTaskProgress(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-
-	_, _ = readEnvVariables()
-
-	dbpool, err := ConnectDB()
-	if err != nil {
-		if config.DebugLog() {
-			log.Fatalf("Error on postgres database: %v\n", err)
-		}
-	}
-	defer dbpool.Close()
-
-	r := SetupRouter()
-
 	req, _ := http.NewRequest("PUT",
 		"/rest/task/"+strconv.Itoa(int(id))+"/start_progress?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
@@ -171,20 +132,6 @@ func TestStartTaskProgress(t *testing.T) {
 }
 
 func TestPauseTask(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-
-	_, _ = readEnvVariables()
-
-	dbpool, err := ConnectDB()
-	if err != nil {
-		if config.DebugLog() {
-			log.Fatalf("Error on postgres database: %v\n", err)
-		}
-	}
-	defer dbpool.Close()
-
-	r := SetupRouter()
-
 	req, _ := http.NewRequest("PUT",
 		"/rest/task/"+strconv.Itoa(int(id))+"/pause?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
@@ -210,20 +157,6 @@ func TestPauseTask(t *testing.T) {
 	assert.Equal(t, model.StatusPaused, result["status"].(string))
 }
 func TestDoneTask(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-
-	_, _ = readEnvVariables()
-
-	dbpool, err := ConnectDB()
-	if err != nil {
-		if config.DebugLog() {
-			log.Fatalf("Error on postgres database: %v\n", err)
-		}
-	}
-	defer dbpool.Close()
-
-	r := SetupRouter()
-
 	req, _ := http.NewRequest("PUT",
 		"/rest/task/"+strconv.Itoa(int(id))+"/done?"+rest.AppSecretName+"="+rest.AppSecret(),
 		nil,
@@ -250,19 +183,7 @@ func TestDoneTask(t *testing.T) {
 }
 
 func TestDeleteTask(t *testing.T) {
-	gin.SetMode(gin.ReleaseMode)
-
-	_, _ = readEnvVariables()
-
-	dbpool, err := ConnectDB()
-	if err != nil {
-		if config.DebugLog() {
-			log.Fatalf("Error on postgres database: %v\n", err)
-		}
-	}
 	defer dbpool.Close()
-
-	r := SetupRouter()
 
 	req, _ := http.NewRequest("DELETE",
 		"/rest/task/"+strconv.Itoa(int(id))+"?"+rest.AppSecretName+"="+rest.AppSecret(),
