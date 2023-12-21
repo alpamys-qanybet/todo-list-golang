@@ -8,7 +8,6 @@ import (
 	"os"
 	"todo/db"
 	"todo/rest"
-	"todo/site"
 )
 
 var databaseUrl string
@@ -31,6 +30,12 @@ func readEnvVariables() (serverHost, serverPort string) {
 		databaseUrl = "postgresql://postgres:postgres@localhost:5432/todo"
 	}
 
+	appSecret := os.Getenv("APP_SECRET")
+	if "" == appSecret {
+		log.Fatal("APP_SECRET is not set in .env file")
+	}
+	rest.SetAppSecret(appSecret)
+
 	log.Println("environtment variables are read")
 	return
 }
@@ -52,10 +57,7 @@ func main() {
 
 	r := gin.Default()
 
-	r.LoadHTMLGlob("templates/**/*")
-	r.GET("/", site.Home)
 	r.GET("/rest", rest.RootIndex)
-	r.GET("/rest/todo", rest.TodoList)
 	r.GET("/rest/task/offset", rest.GetTaskOffset)
 	r.GET("/rest/task/status", rest.GetTaskStatusList)
 	r.POST("/rest/task", rest.CreateTask)

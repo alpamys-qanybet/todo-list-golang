@@ -7,6 +7,21 @@ import (
 	"net/http"
 )
 
+const (
+	appSecretName      = "app_secret"
+	appSecretIncorrect = "INCORRECT_SECRET"
+)
+
+var appSecret string
+
+func SetAppSecret(secret string) {
+	appSecret = secret
+}
+
+func AppSecret() string {
+	return appSecret
+}
+
 func extractBody(c *gin.Context, data *map[string]interface{}) error {
 	body := c.Request.Body
 	value, err := ioutil.ReadAll(body)
@@ -16,6 +31,20 @@ func extractBody(c *gin.Context, data *map[string]interface{}) error {
 
 	json.Unmarshal([]byte(value), &data)
 	return nil
+}
+
+func appSecretIsValid(c *gin.Context) bool {
+	secret := c.Query(appSecretName)
+
+	if secret != AppSecret() {
+		c.JSON(http.StatusOK, gin.H{
+			"data": appSecretIncorrect,
+		})
+
+		return false
+	}
+
+	return true
 }
 
 func RootIndex(c *gin.Context) {

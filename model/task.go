@@ -14,11 +14,13 @@ type Task struct {
 	Description string `json:"description"`
 }
 
-const StatusCreated string = "created"
-const StatusInProgress string = "in_progress"
-const StatusPaused string = "paused"
-const StatusDone string = "done"
-const StatusDeleted string = "deleted"
+const (
+	StatusCreated    = "created"
+	StatusInProgress = "in_progress"
+	StatusPaused     = "paused"
+	StatusDone       = "done"
+	StatusDeleted    = "deleted"
+)
 
 type Status struct {
 	Name string `json:"name"`

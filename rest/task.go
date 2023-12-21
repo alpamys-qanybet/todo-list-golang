@@ -11,6 +11,10 @@ import (
 )
 
 func GetTaskOffset(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	var offset uint16
 	var limit uint8
 	offsetI, err := strconv.Atoi(c.Query("offset"))
@@ -44,6 +48,10 @@ func GetTaskOffset(c *gin.Context) {
 }
 
 func GetTaskStatusList(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	res, err := controller.GetTaskStatusList()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
@@ -57,6 +65,10 @@ func GetTaskStatusList(c *gin.Context) {
 }
 
 func CreateTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	var bodyData map[string]interface{}
 	err := extractBody(c, &bodyData)
 	if err != nil {
@@ -89,6 +101,10 @@ func CreateTask(c *gin.Context) {
 }
 
 func EditTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 	// fmt.Println(id)
 
@@ -123,6 +139,10 @@ func EditTask(c *gin.Context) {
 }
 
 func StartTaskProgress(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("StartTaskProgress")
 	id := controller.StringToUint16(c.Param("id"))
 	fmt.Println(id)
@@ -139,6 +159,10 @@ func StartTaskProgress(c *gin.Context) {
 }
 
 func PauseTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("PauseTask")
 	id := controller.StringToUint16(c.Param("id"))
 	fmt.Println(id)
@@ -155,6 +179,10 @@ func PauseTask(c *gin.Context) {
 }
 
 func DoneTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("DoneTask")
 	id := controller.StringToUint16(c.Param("id"))
 	fmt.Println(id)
@@ -171,6 +199,10 @@ func DoneTask(c *gin.Context) {
 }
 
 func DeleteTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("DeleteTask")
 	id := controller.StringToUint16(c.Param("id"))
 	fmt.Println(id)
@@ -187,6 +219,10 @@ func DeleteTask(c *gin.Context) {
 }
 
 func RestoreTask(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("RestoreTask")
 	id := controller.StringToUint16(c.Param("id"))
 	fmt.Println(id)
@@ -203,6 +239,10 @@ func RestoreTask(c *gin.Context) {
 }
 
 func DeleteTaskCompletely(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("DeleteTaskCompletely")
 	id := controller.StringToUint16(c.Param("id"))
 	fmt.Println(id)
@@ -219,6 +259,10 @@ func DeleteTaskCompletely(c *gin.Context) {
 }
 
 func FreeTaskTrash(c *gin.Context) {
+	if !appSecretIsValid(c) {
+		return
+	}
+
 	fmt.Println("FreeTaskTrash")
 
 	err := controller.FreeTaskTrash()
