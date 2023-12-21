@@ -33,6 +33,9 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5432/todo
 APP_SECRET=kj3mSJbsw4lpFWUsHasQZf9r
 # required
 
+JWT_SECRET=L9C98ouj2SXUyRcz4HRn2sBwIIY5trlzIOyVkcBntWETBz7e4kbIYZwAuVyIBNkyw
+# required
+
 DEBUG=true
 # optional, default false
 ```
@@ -44,8 +47,9 @@ run `sudo docker run --network host todo-app` to launch app
 
 
 ### Urls
- - [Postman](https://api.postman.com/collections/459354-d9a68bfc-5acf-4755-9ae3-22b6b106b1d8?access_key=PMAT-01HJ64NV55Q2R8ZF3C8R8RR1MG)
+ [Postman](https://api.postman.com/collections/459354-d9a68bfc-5acf-4755-9ae3-22b6b106b1d8?access_key=PMAT-01HJ64NV55Q2R8ZF3C8R8RR1MG)
  - `GET "/rest"` RootIndex
+ - `POST "/rest/user/login"` UserLogin
  - `GET "/rest/task/offset"` GetTaskOffset
  - `GET "/rest/task/status"` GetTaskStatusList
  - `POST "/rest/task"` CreateTask

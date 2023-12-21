@@ -70,8 +70,14 @@ func CreateTask(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	var bodyData map[string]interface{}
-	err := extractBody(c, &bodyData)
+	err = extractBody(c, &bodyData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "invalid body param(s)")
 		return
@@ -130,10 +136,16 @@ func EditTask(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	var bodyData map[string]interface{}
-	err := extractBody(c, &bodyData)
+	err = extractBody(c, &bodyData)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, "invalid body param(s)")
 		return
@@ -170,13 +182,19 @@ func StartTaskProgress(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	if config.DebugLog() {
 		log.Println("requesting task start progress", fullUrl(c))
 	}
 
-	err := controller.StartTaskProgress(id)
+	err = controller.StartTaskProgress(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -192,13 +210,19 @@ func PauseTask(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	if config.DebugLog() {
 		log.Println("requesting task pause", fullUrl(c))
 	}
 
-	err := controller.PauseTask(id)
+	err = controller.PauseTask(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -214,13 +238,19 @@ func DoneTask(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	if config.DebugLog() {
 		log.Println("requesting task done", fullUrl(c))
 	}
 
-	err := controller.DoneTask(id)
+	err = controller.DoneTask(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -236,13 +266,19 @@ func DeleteTask(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	if config.DebugLog() {
 		log.Println("requesting task delete", fullUrl(c))
 	}
 
-	err := controller.DeleteTask(id)
+	err = controller.DeleteTask(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -258,13 +294,19 @@ func RestoreTask(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	if config.DebugLog() {
 		log.Println("requesting task restore", fullUrl(c))
 	}
 
-	err := controller.RestoreTask(id)
+	err = controller.RestoreTask(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -280,13 +322,19 @@ func DeleteTaskCompletely(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	id := controller.StringToUint16(c.Param("id"))
 
 	if config.DebugLog() {
 		log.Println("requesting task delete competely", fullUrl(c))
 	}
 
-	err := controller.DeleteTaskCompletely(id)
+	err = controller.DeleteTaskCompletely(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -302,11 +350,17 @@ func FreeTaskTrash(c *gin.Context) {
 		return
 	}
 
+	_, err := authorizeToken(c)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "invalid token")
+		return
+	}
+
 	if config.DebugLog() {
 		log.Println("requesting free task trash", fullUrl(c))
 	}
 
-	err := controller.FreeTaskTrash()
+	err = controller.FreeTaskTrash()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return

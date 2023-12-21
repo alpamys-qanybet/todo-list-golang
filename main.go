@@ -39,6 +39,12 @@ func readEnvVariables() (serverHost, serverPort string) {
 	}
 	rest.SetAppSecret(appSecret)
 
+	jwtSecret := os.Getenv("JWT_SECRET")
+	if "" == jwtSecret {
+		log.Fatal("JWT_SECRET is not set in .env file")
+	}
+	config.SetJwtSecret(jwtSecret)
+
 	debugStr := os.Getenv("DEBUG")
 	debug := true
 	if "" != debugStr {
@@ -76,6 +82,7 @@ func SetupRouter() (r *gin.Engine) {
 	r.Use(gin.Recovery()) // recovery middleware
 
 	r.GET("/rest", rest.RootIndex)
+	r.POST("/rest/user/login", rest.UserLogin)
 	r.GET("/rest/task/offset", rest.GetTaskOffset)
 	r.GET("/rest/task/status", rest.GetTaskStatusList)
 	r.POST("/rest/task", rest.CreateTask)
