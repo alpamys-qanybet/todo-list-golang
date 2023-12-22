@@ -140,7 +140,11 @@ func GetTask(c *gin.Context) {
 		log.Println("requesting task by id", fullUrl(c))
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	res, err := controller.GetTask(id)
 	if err != nil {
@@ -173,7 +177,11 @@ func EditTask(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	var bodyData map[string]interface{}
 	err = extractBody(c, &bodyData)
@@ -229,7 +237,11 @@ func StartTaskProgress(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	if config.DebugLog() {
 		log.Println("requesting task start progress", fullUrl(c))
@@ -267,7 +279,11 @@ func PauseTask(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	if config.DebugLog() {
 		log.Println("requesting task pause", fullUrl(c))
@@ -305,7 +321,11 @@ func DoneTask(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	if config.DebugLog() {
 		log.Println("requesting task done", fullUrl(c))
@@ -343,7 +363,11 @@ func DeleteTask(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	if config.DebugLog() {
 		log.Println("requesting task delete", fullUrl(c))
@@ -381,7 +405,11 @@ func RestoreTask(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	if config.DebugLog() {
 		log.Println("requesting task restore", fullUrl(c))
@@ -419,7 +447,11 @@ func DeleteTaskCompletely(c *gin.Context) {
 		return
 	}
 
-	id := controller.StringToUint16(c.Param("id"))
+	id, err := controller.StringToUint16(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
+		return
+	}
 
 	if config.DebugLog() {
 		log.Println("requesting task delete competely", fullUrl(c))

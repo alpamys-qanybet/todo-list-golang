@@ -2,15 +2,11 @@ package controller
 
 import "strconv"
 
-func StringToUint64(s string) (i uint64) {
+func StringToUint16(s string) (uint16, error) {
 	i, err := strconv.ParseUint(s, 10, 64)
 	if err != nil {
-		return 0
-	} else {
-		return i
+		return 0, err
 	}
-}
 
-func StringToUint16(s string) (i uint16) {
-	return uint16(StringToUint64(s))
+	return uint16(i), nil
 }
