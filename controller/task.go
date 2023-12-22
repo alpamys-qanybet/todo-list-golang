@@ -8,7 +8,7 @@ import (
 	"todo/model"
 )
 
-func GetTaskOffset(offset uint16, limit uint8, status string) (interface{}, error) {
+func GetTaskList(status string) (interface{}, error) {
 	if len(status) > 0 {
 		if !(status == model.StatusCreated || status == model.StatusInProgress || status == model.StatusPaused || status == model.StatusDone || status == model.StatusDeleted) {
 			// it is not one of our statuses, user just mistyped something else
@@ -19,22 +19,10 @@ func GetTaskOffset(offset uint16, limit uint8, status string) (interface{}, erro
 		}
 	}
 
-	// totalElements, err := model.GetTaskTotalElements(status)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	list, err := model.GetTaskListByOffset(offset, limit, status)
+	list, err := model.GetTaskList(status)
 	if err != nil {
 		return nil, err
 	}
-
-	// data := map[string]interface{}{
-	// 	"totalElements": totalElements,
-	// 	"list":          list,
-	// }
-
-	// return data, nil
 
 	return list, nil
 }

@@ -3,7 +3,6 @@ package rest
 import (
 	"log"
 	"net/http"
-	// "strconv"
 
 	_ "todo/docs"
 
@@ -25,34 +24,14 @@ import (
 // @Failure      500  {object}  http.StatusInternalServerError
 
 // @Router       /task [get]
-func GetTaskOffset(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
-	var offset uint16
-	var limit uint8
-	// offsetI, err := strconv.Atoi(c.Query("offset"))
-	// if err != nil {
-	offset = uint16(0)
-	// } else {
-	// 	offset = uint16(offsetI)
-	// }
-
-	// limitI, err := strconv.Atoi(c.Query("limit"))
-	// if err != nil {
-	limit = uint8(50)
-	// } else {
-	// 	limit = uint8(limitI)
-	// }
-
+func GetTaskList(c *gin.Context) {
 	status := c.Query("status")
 
 	if config.DebugLog() {
 		log.Println("requesting task offset", fullUrl(c))
 	}
 
-	res, err := controller.GetTaskOffset(offset, limit, status)
+	res, err := controller.GetTaskList(status)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
@@ -74,10 +53,6 @@ func GetTaskOffset(c *gin.Context) {
 
 // @Router       /task/status [get]
 func GetTaskStatusList(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	if config.DebugLog() {
 		log.Println("requesting task status list", fullUrl(c))
 	}
@@ -106,10 +81,6 @@ func GetTaskStatusList(c *gin.Context) {
 
 // @Router       /task [post]
 func CreateTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -165,10 +136,6 @@ func CreateTask(c *gin.Context) {
 
 // @Router       /task/{id} [get]
 func GetTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	if config.DebugLog() {
 		log.Println("requesting task by id", fullUrl(c))
 	}
@@ -194,16 +161,12 @@ func GetTask(c *gin.Context) {
 // @Produce      json
 // @Param id path int true "task id"
 // @Param input body todo.Model true "task input name,description"
-// @Success	200 {object} 
+// @Success	200 {object}
 // @Failure      400  {object}  http.StatusBadRequest
 // @Failure      500  {object}  http.StatusInternalServerError
 
 // @Router       /task/{id} [put]
 func EditTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -260,10 +223,6 @@ func EditTask(c *gin.Context) {
 
 // @Router       /task/{id}/start_progress [put]
 func StartTaskProgress(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -302,10 +261,6 @@ func StartTaskProgress(c *gin.Context) {
 
 // @Router       /task/{id}/pause [put]
 func PauseTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -344,10 +299,6 @@ func PauseTask(c *gin.Context) {
 
 // @Router       /task/{id}/done [put]
 func DoneTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -386,10 +337,6 @@ func DoneTask(c *gin.Context) {
 
 // @Router       /task/{id} [delete]
 func DeleteTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -428,10 +375,6 @@ func DeleteTask(c *gin.Context) {
 
 // @Router       /task/{id}/restore [put]
 func RestoreTask(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -470,10 +413,6 @@ func RestoreTask(c *gin.Context) {
 
 // @Router       /task/{id}/completely [delete]
 func DeleteTaskCompletely(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")
@@ -511,10 +450,6 @@ func DeleteTaskCompletely(c *gin.Context) {
 
 // @Router       /task/free_trash [delete]
 func FreeTaskTrash(c *gin.Context) {
-	// if !appSecretIsValid(c) {
-	// 	return
-	// }
-
 	_, err := authorizeToken(c)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, "invalid token")

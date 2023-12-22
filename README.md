@@ -30,9 +30,6 @@ SERVER_PORT=8080
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/todo
 # optional, default: postgresql://postgres:postgres@localhost:5432/todo
 
-# APP_SECRET=kj3mSJbsw4lpFWUsHasQZf9r
-# required
-
 JWT_SECRET=L9C98ouj2SXUyRcz4HRn2sBwIIY5trlzIOyVkcBntWETBz7e4kbIYZwAuVyIBNkyw
 # required
 

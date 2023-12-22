@@ -13,39 +13,6 @@ import (
 	"github.com/golang-jwt/jwt"
 )
 
-// const (
-// 	AppSecretName      = "app_secret"
-// 	appSecretIncorrect = "INCORRECT_SECRET"
-// )
-
-// var appSecret string
-
-// func SetAppSecret(secret string) {
-// 	appSecret = secret
-// }
-
-// func AppSecret() string {
-// 	return appSecret
-// }
-
-// func appSecretIsValid(c *gin.Context) bool {
-// 	secret := c.Query(AppSecretName)
-
-// 	if secret != AppSecret() {
-// 		if config.DebugLog() {
-// 			log.Printf("app secret is incorrect '%s', must be '%s'", secret, AppSecret())
-// 		}
-
-// 		c.JSON(http.StatusBadRequest, gin.H{
-// 			"data": appSecretIncorrect,
-// 		})
-
-// 		return false
-// 	}
-
-// 	return true
-// }
-
 func authorizeToken(c *gin.Context) (uint16, error) { // returns authorized user id
 	bearerToken := c.Request.Header.Get("Authorization")
 

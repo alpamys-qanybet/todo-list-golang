@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"log"
-	"strconv"
 	"todo/config"
 	"todo/db"
 )
@@ -28,31 +27,7 @@ type Status struct {
 	Name string `json:"name"`
 }
 
-func GetTaskTotalElements(status string) (uint32, error) {
-	conn, err := db.ConnectionPool()
-	if err != nil {
-		return 0, err
-	}
-
-	var result uint32
-
-	sqlQuery := `
-		SELECT COUNT(*) AS _c
-		FROM task
-	`
-
-	if len(status) > 0 {
-		sqlQuery += "WHERE status = '" + status + "'"
-	} else {
-		sqlQuery += "WHERE status <> '" + StatusDeleted + "'" // by default show all and ignore deleted
-	}
-
-	err = conn.QueryRow(context.Background(), sqlQuery).Scan(&result)
-
-	return result, err
-}
-
-func GetTaskListByOffset(offset uint16, limit uint8, status string) ([]*Task, error) {
+func GetTaskList(status string) ([]*Task, error) {
 	conn, err := db.ConnectionPool()
 	if err != nil {
 		return nil, err
@@ -66,20 +41,15 @@ func GetTaskListByOffset(offset uint16, limit uint8, status string) ([]*Task, er
 	`
 
 	if len(status) > 0 {
-		sqlQuery += "WHERE status = '" + status + "'"
+		sqlQuery += "WHERE status = $1"
 	} else {
-		sqlQuery += "WHERE status <> '" + StatusDeleted + "'" // by default show all and ignore deleted
+		sqlQuery += "WHERE status <> $1" // by default show all and ignore deleted
+		status = StatusDeleted
 	}
 
 	sqlQuery += " ORDER BY id ASC"
 
-	if offset == 0 && limit == 0 {
-		// do nothing
-	} else {
-		sqlQuery += " LIMIT " + strconv.Itoa(int(limit)) + " OFFSET " + strconv.Itoa(int(offset))
-	}
-
-	rows, err := conn.Query(context.Background(), sqlQuery)
+	rows, err := conn.Query(context.Background(), sqlQuery, status)
 	if err != nil {
 		return nil, err
 	}

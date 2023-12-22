@@ -20,10 +20,7 @@ import (
 var databaseUrl string
 
 func readEnvVariables() (serverHost, serverPort string) {
-	err := godotenv.Load()
-	if err != nil {
-		// log.Fatal("Error loading .env file")
-	}
+	_ = godotenv.Load() // do nothing if file .env does not exist, just use default values.
 
 	serverHost = os.Getenv("SERVER_HOST")
 
@@ -36,12 +33,6 @@ func readEnvVariables() (serverHost, serverPort string) {
 	if "" == databaseUrl {
 		databaseUrl = "postgresql://postgres:postgres@localhost:5432/todo"
 	}
-
-	// appSecret := os.Getenv("APP_SECRET")
-	// if "" == appSecret {
-	// 	log.Fatal("APP_SECRET is not set in .env file")
-	// }
-	// rest.SetAppSecret(appSecret)
 
 	jwtSecret := os.Getenv("JWT_SECRET")
 	if "" == jwtSecret {
@@ -89,8 +80,7 @@ func SetupRouter() (r *gin.Engine) {
 
 	r.GET("/rest", rest.RootIndex)
 	r.POST("/rest/user/login", rest.UserLogin)
-	// r.GET("/rest/task/offset", rest.GetTaskOffset)
-	r.GET("/rest/task", rest.GetTaskOffset)
+	r.GET("/rest/task", rest.GetTaskList)
 	r.GET("/rest/task/status", rest.GetTaskStatusList)
 	r.POST("/rest/task", rest.CreateTask)
 	r.GET("/rest/task/:id", rest.GetTask)
