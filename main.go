@@ -62,11 +62,6 @@ func ConnectDB() (*pgxpool.Pool, error) {
 		return nil, err
 	}
 
-	err = db.CreateDatabaseTablesIfNotExists()
-	if err != nil {
-		return nil, err
-	}
-
 	if config.DebugLog() {
 		log.Println("postgres db connected SUCCESSFUL")
 	}

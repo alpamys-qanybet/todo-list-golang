@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  todo-app:
+    build: ./
+    command: ./wait-for-postgres.sh db ./hello
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+    environment:
+      - DB_PASSWORD=postgres
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    
+  db:
+    image: postgres:12
+    container_name: todo_app_db
+    restart: always
+    environment:
+      POSTGRES_DB: "todo"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    ports:
+      - "5433:5432"
+  
