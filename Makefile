@@ -1,8 +1,8 @@
 build:
-	docker-compose build todo-app
+	docker compose build todo-app
 
 run:
-	docker-compose up todo-app
+	docker compose up todo-app
 
 test:
 	go test -v
