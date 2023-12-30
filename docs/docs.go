@@ -21,62 +21,7 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {
-        "/task": {
-            "get": {
-                "responses": {}
-            },
-            "post": {
-                "responses": {}
-            }
-        },
-        "/task/free_trash": {
-            "delete": {
-                "responses": {}
-            }
-        },
-        "/task/status": {
-            "get": {
-                "responses": {}
-            }
-        },
-        "/task/{id}": {
-            "get": {
-                "responses": {}
-            },
-            "put": {
-                "responses": {}
-            },
-            "delete": {
-                "responses": {}
-            }
-        },
-        "/task/{id}/completely": {
-            "delete": {
-                "responses": {}
-            }
-        },
-        "/task/{id}/done": {
-            "put": {
-                "responses": {}
-            }
-        },
-        "/task/{id}/pause": {
-            "put": {
-                "responses": {}
-            }
-        },
-        "/task/{id}/restore": {
-            "put": {
-                "responses": {}
-            }
-        },
-        "/task/{id}/start_progress": {
-            "put": {
-                "responses": {}
-            }
-        }
-    },
+    "paths": {},
     "securityDefinitions": {
         "ApiKeyAuth": {
             "type": "apiKey",

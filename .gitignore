@@ -1,3 +1,4 @@
 .env
-todo
+cmd/app/app
+main
 /vendor/

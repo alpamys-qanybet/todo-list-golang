@@ -13,40 +13,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Todo app API
   version: "1.0"
-paths:
-  /task:
-    get:
-      responses: {}
-    post:
-      responses: {}
-  /task/{id}:
-    delete:
-      responses: {}
-    get:
-      responses: {}
-    put:
-      responses: {}
-  /task/{id}/completely:
-    delete:
-      responses: {}
-  /task/{id}/done:
-    put:
-      responses: {}
-  /task/{id}/pause:
-    put:
-      responses: {}
-  /task/{id}/restore:
-    put:
-      responses: {}
-  /task/{id}/start_progress:
-    put:
-      responses: {}
-  /task/free_trash:
-    delete:
-      responses: {}
-  /task/status:
-    get:
-      responses: {}
+paths: {}
 securityDefinitions:
   ApiKeyAuth:
     in: header

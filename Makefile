@@ -5,14 +5,14 @@ run:
 	docker compose up todo-app
 
 test:
-	go test -v
+	go test -v ./...
 
 migrate:
-	docker exec -i todo_app_db psql -U postgres -W postgres -d todo < init.sql
+	docker exec -i todo_app_db psql -U postgres -W postgres -d todo < scripts/init.sql
 
 swag:
-	swag init
+	swag init -d cmd/app
 
 todo:
-	go run main.go
+	go run cmd/app/main.go
 

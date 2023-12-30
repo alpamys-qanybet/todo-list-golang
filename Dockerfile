@@ -6,10 +6,9 @@ COPY . .
 RUN go mod download
 RUN go mod tidy
 RUN go mod vendor
-RUN go build -o /app/hello
-
-# make wait-for-postgres.sh executable
-RUN chmod +x /app/wait-for-postgres.sh
+RUN go build cmd/app/main.go
+RUN mv main /app/hello
+RUN chmod +x /app/scripts/wait-for-postgres.sh
 
 FROM debian:bullseye
 
@@ -19,7 +18,7 @@ FROM debian:bullseye
 RUN apt-get update
 RUN apt-get -y install postgresql-client
 
-COPY --from=golangbuild /app/wait-for-postgres.sh .
+COPY --from=golangbuild /app/scripts/wait-for-postgres.sh .
 COPY --from=golangbuild /app/hello .
 
 ENV DATABASE_URL=postgresql://postgres:postgres@host.docker.internal:5433/todo
